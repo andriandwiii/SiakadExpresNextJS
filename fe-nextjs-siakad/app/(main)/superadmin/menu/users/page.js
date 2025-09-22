@@ -1,109 +1,120 @@
-'use client'
+'use client';
 
-import { useEffect, useState, useRef } from "react";
-import { useRouter } from "next/navigation";
-import { getUsers, createUser, updateUser, deleteUser } from "./utils/api";
-import UserFormModal from "./components/UserFormModal";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
-import { Button } from "primereact/button";
-import ToastNotifier from "./../../../../components/ToastNotifier";
+import { useEffect, useState, useRef } from 'react';
+import { Button } from 'primereact/button';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import ToastNotifier from '../../../../components/ToastNotifier';
+import UserFormModal from './components/UserFormModal';
+import { getUsers, createUser, updateUser, deleteUser } from './utils/api';
 
 export default function UsersPage() {
-  const router = useRouter();
-  const [token, setToken] = useState("");
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingUser, setEditingUser] = useState(null);
   const toastRef = useRef(null);
 
-  // cek token
-  useEffect(() => {
-    const t = localStorage.getItem("token");
-    if (!t) router.push("/");
-    else setToken(t);
-  }, [router]);
+  const [users, setUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [dialogMode, setDialogMode] = useState(null); // 'add' | 'edit' | null
+  const [token, setToken] = useState('');
 
-  // ambil data user
+  useEffect(() => {
+    const t = localStorage.getItem('token');
+    if (!t) window.location.href = '/';
+    else setToken(t);
+  }, []);
+
   useEffect(() => {
     if (token) fetchUsers();
   }, [token]);
 
   const fetchUsers = async () => {
+    setIsLoading(true);
     try {
-      setLoading(true);
       const res = await getUsers(token);
       setUsers(res || []);
     } catch (err) {
-      console.error("Fetch users failed:", err);
+      console.error(err);
       toastRef.current?.showToast('01', 'Gagal memuat data user');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  const handleSave = async (data) => {
+  const handleSubmit = async (data) => {
+    if (!dialogMode) return;
+
     try {
-      if (editingUser) {
-        await updateUser(token, editingUser.id, data);
-        toastRef.current?.showToast('00', 'User berhasil diupdate');
-      } else {
+      if (dialogMode === 'add') {
         await createUser(token, data);
         toastRef.current?.showToast('00', 'User berhasil dibuat');
+      } else if (dialogMode === 'edit' && selectedUser) {
+        await updateUser(token, selectedUser.id, data);
+        toastRef.current?.showToast('00', 'User berhasil diupdate');
       }
-      await fetchUsers();
-      setIsModalOpen(false);
-      setEditingUser(null);
+      fetchUsers();
+      setDialogMode(null);
+      setSelectedUser(null);
     } catch (err) {
-      console.error("Gagal simpan user:", err);
+      console.error(err);
       toastRef.current?.showToast('01', 'Gagal menyimpan user');
     }
   };
 
-  const handleEdit = (user) => {
-    setEditingUser(user);
-    setIsModalOpen(true);
-  };
-
-  const handleDelete = async (user) => {
-    if (confirm("Yakin mau hapus user ini?")) {
-      try {
-        await deleteUser(token, user.id);
-        toastRef.current?.showToast('00', 'User berhasil dihapus');
-        await fetchUsers();
-      } catch (err) {
-        console.error("Delete user failed:", err);
-        toastRef.current?.showToast('01', 'Gagal menghapus user');
-      }
-    }
-  };
-
-  const handleComplete = (user) => {
-    toastRef.current?.showToast('03', `Lengkapi data user: ${user.name}`);
+  const handleDelete = (user) => {
+    confirmDialog({
+      message: `Yakin ingin menghapus user "${user.name}"?`,
+      header: 'Konfirmasi Hapus',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Hapus',
+      rejectLabel: 'Batal',
+      acceptClassName: 'p-button-danger',
+      accept: async () => {
+        try {
+          await deleteUser(token, user.id);
+          toastRef.current?.showToast('00', 'User berhasil dihapus');
+          setUsers((prev) => prev.filter((u) => u.id !== user.id));
+        } catch (err) {
+          console.error(err);
+          toastRef.current?.showToast('01', 'Gagal menghapus user');
+        }
+      },
+    });
   };
 
   const actionBodyTemplate = (rowData) => (
     <div className="flex gap-2">
-      <Button icon="pi pi-pencil" size="small" severity="warning" onClick={() => handleEdit(rowData)} />
-      <Button icon="pi pi-trash" size="small" severity="danger" onClick={() => handleDelete(rowData)} />
-      <Button icon="pi pi-check" size="small" severity="info" onClick={() => handleComplete(rowData)} />
+      <Button
+        icon="pi pi-pencil"
+        size="small"
+        severity="warning"
+        onClick={() => {
+          setSelectedUser(rowData);
+          setDialogMode('edit');
+        }}
+      />
+      <Button
+        icon="pi pi-trash"
+        size="small"
+        severity="danger"
+        onClick={() => handleDelete(rowData)}
+      />
     </div>
   );
 
   return (
-    <div className="p-4">
-      <ToastNotifier ref={toastRef} />
+    <div className="card p-4">
+      <h3 className="text-xl font-semibold mb-4">Manage Users</h3>
 
-      <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
-        <h1 className="text-3xl font-bold">Manage Users</h1>
+      <div className="flex justify-content-end mb-3">
         <Button
-          label="Add User"
+          label="Tambah User"
           icon="pi pi-plus"
-          severity="primary"
           onClick={() => {
-            setEditingUser(null);
-            setIsModalOpen(true);
+            setDialogMode('add');
+            setSelectedUser(null);
           }}
         />
       </div>
@@ -112,10 +123,10 @@ export default function UsersPage() {
         value={users}
         paginator
         rows={10}
-        loading={loading}
+        loading={isLoading}
         size="small"
         className="text-sm"
-        responsiveLayout="scroll"
+        scrollable
       >
         <Column field="id" header="ID" style={{ width: '60px' }} />
         <Column field="name" header="Name" filter />
@@ -124,22 +135,31 @@ export default function UsersPage() {
         <Column
           field="created_at"
           header="Created At"
-          body={(row) => row.created_at ? new Date(row.created_at).toLocaleString() : '-'}
+          body={(row) => (row.created_at ? new Date(row.created_at).toLocaleString() : '-')}
         />
         <Column
           field="updated_at"
           header="Updated At"
-          body={(row) => row.updated_at ? new Date(row.updated_at).toLocaleString() : '-'}
+          body={(row) => (row.updated_at ? new Date(row.updated_at).toLocaleString() : '-')}
         />
-        <Column header="Actions" body={actionBodyTemplate} style={{ width: '180px' }} />
+        <Column header="Actions" body={actionBodyTemplate} style={{ width: '150px' }} />
       </DataTable>
 
+      <ConfirmDialog />
+
+      {/* Dialog Add/Edit */}
       <UserFormModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleSave}
-        user={editingUser}
+        isOpen={dialogMode !== null}
+        onClose={() => {
+          setDialogMode(null);
+          setSelectedUser(null);
+        }}
+        user={selectedUser}
+        onSubmit={handleSubmit}
+        mode={dialogMode}
       />
+
+      <ToastNotifier ref={toastRef} />
     </div>
   );
 }

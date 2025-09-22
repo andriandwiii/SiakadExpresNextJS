@@ -1,22 +1,23 @@
 'use client';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { roleRoutes } from 'utils/roleRoutes'; // import helper
+import { roleRoutes } from 'utils/roleRoutes';
+import ToastNotifier, { ToastNotifierHandle } from '../../../components/ToastNotifier'
 import '@/styles/gradient.css';
 
 const LoginPage = () => {
   const router = useRouter();
+  const toastRef = useRef<ToastNotifierHandle>(null); // ref ToastNotifier
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
@@ -28,7 +29,7 @@ const LoginPage = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.message || 'Login gagal');
+        toastRef.current?.showToast('01', data.message || 'Login gagal'); // gunakan toast
         setLoading(false);
         return;
       }
@@ -37,12 +38,14 @@ const LoginPage = () => {
       localStorage.setItem('token', data.token);
       localStorage.setItem('role', data.user.role);
 
+      toastRef.current?.showToast('00', 'Login berhasil'); // toast success
+
       // redirect sesuai role
       const redirect = roleRoutes[data.user.role] || '/';
       router.push(redirect);
 
     } catch (err) {
-      setError('Terjadi kesalahan koneksi');
+      toastRef.current?.showToast('99', 'Terjadi kesalahan koneksi');
     } finally {
       setLoading(false);
     }
@@ -50,10 +53,11 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen flex justify-content-center align-items-center">
+      <ToastNotifier ref={toastRef} />
       <div className="animated-gradient-bg w-full h-full flex justify-content-center align-items-center">
         <div className="card w-full md:w-6 h-auto p-5 shadow-3 rounded-lg">
           <div className="grid h-full">
-            {/* Bagian Form */}
+            {/* Form */}
             <div className="col-12 md:col-6 flex flex-col justify-center h-full px-4">
               <div>
                 <h3 className="text-2xl text-center font-semibold mb-5">
@@ -62,9 +66,7 @@ const LoginPage = () => {
 
                 <form className="grid" onSubmit={handleSubmit}>
                   <div className="col-12 mb-4">
-                    <label htmlFor="email" className="block text-sm font-semibold">
-                      Email
-                    </label>
+                    <label htmlFor="email" className="block text-sm font-semibold">Email</label>
                     <InputText
                       id="email"
                       type="email"
@@ -76,9 +78,7 @@ const LoginPage = () => {
                   </div>
 
                   <div className="col-12 mb-4">
-                    <label htmlFor="password" className="block text-sm font-semibold">
-                      Password
-                    </label>
+                    <label htmlFor="password" className="block text-sm font-semibold">Password</label>
                     <InputText
                       id="password"
                       type="password"
@@ -88,10 +88,6 @@ const LoginPage = () => {
                       required
                     />
                   </div>
-
-                  {error && (
-                    <div className="col-12 mb-2 text-red-500 text-sm">{error}</div>
-                  )}
 
                   <div className="col-12 mb-4">
                     <Button
@@ -105,7 +101,7 @@ const LoginPage = () => {
               </div>
             </div>
 
-            {/* Bagian Gambar */}
+            {/* Gambar */}
             <div className="hidden md:block md:col-6 h-full">
               <img
                 src="https://api.minio.jatimprov.go.id/kominfo-jatim/images/e1a81661-d82b-4775-af7a-aaa72616961f.jpg"

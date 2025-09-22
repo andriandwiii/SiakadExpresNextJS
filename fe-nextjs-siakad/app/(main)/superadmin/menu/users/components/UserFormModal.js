@@ -3,7 +3,6 @@
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
-import { Password } from 'primereact/password';
 import { Dropdown } from 'primereact/dropdown';
 import { Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -19,46 +18,42 @@ const roles = [
   { label: 'SISWA', value: 'SISWA' },
 ];
 
-const UserFormModal = ({ isOpen, onClose, onSubmit, user }) => {
-  const isEdit = !!user;
+const defaultValues = {
+  name: '',
+  email: '',
+  role: 'KURIKULUM',
+  password: '',
+};
 
-  const initialValues = {
-    name: user?.name || '',
-    email: user?.email || '',
-    role: user?.role || 'KURIKULUM',
-    password: '',
-  };
+const validationSchema = Yup.object({
+  name: Yup.string().required('Nama wajib diisi'),
+  email: Yup.string().email('Email tidak valid').required('Email wajib diisi'),
+  role: Yup.string().required('Role wajib dipilih'),
+  password: Yup.string(),
+});
 
-  const validationSchema = Yup.object({
-    name: Yup.string().required('Nama wajib diisi'),
-    email: Yup.string().email('Email tidak valid').required('Email wajib diisi'),
-    role: Yup.string().required('Role wajib dipilih'),
-    password: !isEdit
-      ? Yup.string().required('Password wajib diisi')
-      : Yup.string(),
-  });
+const UserFormModal = ({ isOpen, onClose, onSubmit, user, mode }) => {
+  const isEdit = mode === 'edit';
 
-  const handleSubmit = (values, actions) => {
-    const payload = isEdit
-      ? { name: values.name, email: values.email, role: values.role }
-      : values; // create include password
+  const initialValues = user
+    ? { name: user.name, email: user.email, role: user.role, password: '' }
+    : defaultValues;
 
-    onSubmit(payload);
-    actions.setSubmitting(false);
-  };
+  const title = isEdit ? `Edit User: ${user?.name || ''}` : 'Tambah User';
 
   return (
-    <Dialog
-      header={isEdit ? 'Edit User' : 'Add User'}
-      visible={isOpen}
-      onHide={onClose}
-      style={{ minWidth: '400px' }}
-    >
+    <Dialog style={{ minWidth: '50vw' }} header={title} visible={isOpen} onHide={onClose}>
       <Formik
         initialValues={initialValues}
         enableReinitialize
         validationSchema={validationSchema}
-        onSubmit={handleSubmit}
+        onSubmit={(values, actions) => {
+          const payload = isEdit
+            ? { name: values.name, email: values.email, role: values.role }
+            : values; // include password for new user
+          onSubmit(payload);
+          actions.setSubmitting(false);
+        }}
       >
         {({ values, handleChange, setFieldValue, isSubmitting }) => (
           <Form className="flex flex-col gap-3">
@@ -67,7 +62,7 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user }) => {
               <InputText
                 id="name"
                 name="name"
-                className="w-full mt-1"
+                className="w-full mt-2"
                 value={values.name}
                 onChange={handleChange}
               />
@@ -79,7 +74,7 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user }) => {
               <InputText
                 id="email"
                 name="email"
-                className="w-full mt-1"
+                className="w-full mt-2"
                 value={values.email}
                 onChange={handleChange}
               />
@@ -89,13 +84,13 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user }) => {
             {!isEdit && (
               <div>
                 <label htmlFor="password">Password</label>
-                <Password
+                <InputText
                   id="password"
                   name="password"
-                  className="w-full mt-1"
+                  type="password"
+                  className="w-full mt-2"
                   value={values.password}
                   onChange={handleChange}
-                  toggleMask
                 />
                 <ErrorMessage name="password" component="small" className="p-error" />
               </div>
@@ -109,23 +104,20 @@ const UserFormModal = ({ isOpen, onClose, onSubmit, user }) => {
                 value={values.role}
                 options={roles}
                 onChange={(e) => setFieldValue('role', e.value)}
-                className="w-full mt-1"
+                className="w-full mt-2"
                 placeholder="Select Role"
               />
               <ErrorMessage name="role" component="small" className="p-error" />
             </div>
 
             <div className="flex justify-end gap-2 mt-3">
+              <Button label="Cancel" severity="secondary" onClick={onClose} />
               <Button
-                label="Cancel"
-                severity="secondary"
-                onClick={onClose}
-              />
-              <Button
-                label={isEdit ? 'Update' : 'Create'}
+                label={isEdit ? 'Update' : 'Simpan'}
                 type="submit"
                 severity="success"
                 disabled={isSubmitting}
+                icon="pi pi-save"
               />
             </div>
           </Form>
