@@ -24,6 +24,6 @@
             "@/*": ["./*"]
         }
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/(main)/superadmin/menu/users/components/UserTable.js", "app/components/ToastNotifier.tsx"],
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/(main)/superadmin/menu/users/components/UserTable.js", "app/components/ToastNotifier.tsx", "layout/AppTopbar.js"],
     "exclude": ["node_modules"]
 }
