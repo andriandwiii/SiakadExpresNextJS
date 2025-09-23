@@ -17,7 +17,7 @@ import dashboardRoutes from './routes/dashboardRoutes.js';
 import userRoutes from "./routes/userRoutes.js";
 import masterSiswaRoutes from "./routes/masterSiswaRoutes.js";
 import masterKelasRoutes from "./routes/masterKelasRoutes.js";
-import masterSiswaRoutes from "./routes/masterRoutes.js";
+
 const app = express();
 
 const allowedOrigins = ["http://localhost:3000"];
@@ -69,5 +69,6 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/master-siswa", masterSiswaRoutes);
 app.use("/api/master-kelas", masterKelasRoutes);
+app.use("/api/master-guru", masterGuruRoutes); 
 
 export default app;
