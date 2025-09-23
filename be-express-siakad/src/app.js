@@ -3,10 +3,10 @@ import express from "express";
 import logger from "morgan";
 
 import { setResponseHeader } from "./middleware/set-headers.js";
-
 import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import masterSiswaRoutes from "./routes/masterSiswaRoutes.js";
+import masterKelasRoutes from "./routes/masterKelasRoutes.js";
 
 const app = express();
 
@@ -43,5 +43,6 @@ app.get("/", [setResponseHeader], (req, res) => {
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/master-siswa", masterSiswaRoutes);
+app.use("/api/master-kelas", masterKelasRoutes);
 
 export default app;
