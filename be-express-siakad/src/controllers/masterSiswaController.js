@@ -1,64 +1,61 @@
-import * as masterSiswaModel from "../models/masterSiswaModel.js"; // Ensure the correct path
+import * as masterKelasModel from "../models/masterKelasModel.js"; // Pastikan path ini sesuai
 
-export const getAllMasterSiswa = async (req, res) => {
+// Mendapatkan semua data kelas
+export const fetchAllKelas = async (req, res) => {
   try {
-    const siswa = await masterSiswaModel.getAllMasterSiswa();
-    res.json(siswa);
+    const kelas = await masterKelasModel.fetchAllKelas();
+    res.json(kelas);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-export const getMasterSiswaById = async (req, res) => {
+// Mendapatkan kelas berdasarkan ID
+export const getKelasByIdController = async (req, res) => {
+  const { id } = req.params; // Mengambil ID dari parameter URL
+
   try {
-    const siswa = await masterSiswaModel.getMasterSiswaById(req.params.id);
-    if (!siswa) return res.status(404).json({ message: "Master siswa tidak ditemukan" });
-    res.json(siswa);
+    const kelas = await masterKelasModel.getKelasById(id);
+
+    if (!kelas) {
+      return res.status(404).json({ message: 'Kelas tidak ditemukan' });
+    }
+
+    res.json(kelas); // Mengembalikan data kelas
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-export const addMasterSiswa = async (req, res) => {
+// Menambahkan kelas baru
+export const createNewKelas = async (req, res) => {
+  const { KODE_KELAS, NAMA_KELAS, JURUSAN, TAHUN_AJARAN } = req.body;
+
   try {
-    const { NIS, NISN, NAMA, GENDER, TGL_LAHIR, STATUS, EMAIL } = req.body;
-    const newSiswa = await masterSiswaModel.addMasterSiswa({
-      NIS,
-      NISN,
-      NAMA,
-      GENDER,
-      TGL_LAHIR,
-      STATUS,
-      EMAIL,
-    });
-    res.status(201).json(newSiswa);
+    const newKelas = await masterKelasModel.createNewKelas({ KODE_KELAS, NAMA_KELAS, JURUSAN, TAHUN_AJARAN });
+    res.status(201).json(newKelas);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-export const updateMasterSiswa = async (req, res) => {
+// Memperbarui data kelas
+export const updateKelasController = async (req, res) => {
+  const { KODE_KELAS, NAMA_KELAS, JURUSAN, TAHUN_AJARAN } = req.body;
+
   try {
-    const { NIS, NISN, NAMA, GENDER, TGL_LAHIR, STATUS, EMAIL } = req.body;
-    const updatedSiswa = await masterSiswaModel.updateMasterSiswa(req.params.id, {
-      NIS,
-      NISN,
-      NAMA,
-      GENDER,
-      TGL_LAHIR,
-      STATUS,
-      EMAIL,
-    });
-    res.json(updatedSiswa);
+    const updatedKelas = await masterKelasModel.updateKelas(req.params.id, { KODE_KELAS, NAMA_KELAS, JURUSAN, TAHUN_AJARAN });
+    res.json(updatedKelas);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-export const deleteMasterSiswa = async (req, res) => {
+// Menghapus kelas berdasarkan ID
+export const deleteKelasController = async (req, res) => {
   try {
-    await masterSiswaModel.deleteMasterSiswa(req.params.id);
-    res.json({ message: "Master siswa berhasil dihapus" });
+    await masterKelasModel.deleteKelas(req.params.id);
+    res.json({ message: "Kelas berhasil dihapus" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

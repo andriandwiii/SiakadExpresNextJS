@@ -15,10 +15,12 @@ export default function UsersPage() {
   const toastRef = useRef(null);
 
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [dialogMode, setDialogMode] = useState(null); // 'add' | 'edit' | null
   const [token, setToken] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState('');
 
   useEffect(() => {
     const t = localStorage.getItem('token');
@@ -35,6 +37,7 @@ export default function UsersPage() {
     try {
       const res = await getUsers(token);
       setUsers(res || []);
+      setFilteredUsers(res || []);
     } catch (err) {
       console.error(err);
       toastRef.current?.showToast('01', 'Gagal memuat data user');
@@ -84,6 +87,23 @@ export default function UsersPage() {
     });
   };
 
+  const handleSearch = (event) => {
+    const keyword = event.target.value;
+    setSearchKeyword(keyword);
+
+    if (!keyword) {
+      setFilteredUsers(users); // Show all users if search is cleared
+    } else {
+      const filtered = users.filter(
+        (user) =>
+          user.name.toLowerCase().includes(keyword.toLowerCase()) ||
+          user.email.toLowerCase().includes(keyword.toLowerCase()) ||
+          user.role.toLowerCase().includes(keyword.toLowerCase())
+      );
+      setFilteredUsers(filtered);
+    }
+  };
+
   const actionBodyTemplate = (rowData) => (
     <div className="flex gap-2">
       <Button
@@ -108,19 +128,28 @@ export default function UsersPage() {
     <div className="card p-4">
       <h3 className="text-xl font-semibold mb-4">Manage Users</h3>
 
-      <div className="flex justify-content-end mb-3">
-        <Button
-          label="Tambah User"
-          icon="pi pi-plus"
-          onClick={() => {
-            setDialogMode('add');
-            setSelectedUser(null);
-          }}
-        />
+      <div className="flex justify-content-between mb-3">
+        {/* Search Bar for filtering users */}
+        <div className="flex">
+          <InputText
+            value={searchKeyword}
+            onChange={handleSearch}
+            placeholder="Cari Siswa..."
+            className="mr-3"
+          />
+          <Button
+            label="Tambah User"
+            icon="pi pi-plus"
+            onClick={() => {
+              setDialogMode('add');
+              setSelectedUser(null);
+            }}
+          />
+        </div>
       </div>
 
       <DataTable
-        value={users}
+        value={filteredUsers}
         paginator
         rows={10}
         loading={isLoading}
