@@ -35,8 +35,8 @@ useEffect(() => {
       {
         label: "Master Data",
         items: [
-          { label: "Agama", icon: "pi pi-fw pi-building-columns", to: "/master/agama" },
-          { label: "Aset Sekolah", icon: "pi pi-fw pi-warehouse", to: "/master/aset_sekolah" },
+          { label: "Agama", icon: "pi pi-user-plus", to: "/master/agama" },
+          { label: "Aset Sekolah", icon: "pi pi-tags", to: "/master/aset_sekolah" },
           { label: "Guru", icon: "pi pi-fw pi-users", to: "/master/guru" },
           { label: "Informasi Sekolah", icon: "pi pi-fw pi-info-circle", to: "/master/informasi_sekolah" },
           { label: "Kelas", icon: "pi pi-fw pi-th-large", to: "/master/kelas" },

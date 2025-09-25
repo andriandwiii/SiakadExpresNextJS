@@ -2,16 +2,16 @@ import { db } from "../core/config/knex.js";
 
 
 export const getAll = () =>
-    db('agama').select().orderBy('IDAGAMA', 'asc');
+    db('master_agama').select().orderBy('IDAGAMA', 'asc');
 
 export const getById = (id) =>
-    db('agama').where({ IDAGAMA: id }).first();
+    db('master_agama').where({ IDAGAMA: id }).first();
 
 export const create = (data) =>
-    db('agama').insert(data);
+    db('master_agama').insert(data);
 
 export const update = (id, data) =>
-    db('agama').where({ IDAGAMA: id }).update(data);
+    db('master_agama').where({ IDAGAMA: id }).update(data);
 
 export const remove = (id) =>
-    db('agama').where({ IDAGAMA: id }).del();
+    db('master_agama').where({ IDAGAMA: id }).del();
