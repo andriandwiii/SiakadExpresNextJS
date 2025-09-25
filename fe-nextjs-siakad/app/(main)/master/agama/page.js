@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import HeaderBar from "@/app/components/headerbar";
 import TabelAgama from "./components/tabelAgama";
 import FormDialogAgama from "./components/formDialogAgama";
-import ToastNotifier from "@/app/components/toastNotifier";
+import ToastNotifier from "/app/components/toastNotifier";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -21,9 +21,10 @@ const Page = () => {
   const toastRef = useRef(null);
   const router = useRouter();
 
+  // Only fetch data on initial load, not on route change
   useEffect(() => {
     fetchData();
-  }, [router]);
+  }, []);
 
   const fetchData = async () => {
     setLoading(true);
@@ -32,17 +33,16 @@ const Page = () => {
       setData(res.data.data);
     } catch (err) {
       console.error("Gagal ambil data:", err);
+      toastRef.current?.showToast("01", "Gagal mengambil data agama");
     } finally {
       setLoading(false);
     }
   };
 
   const validateForm = () => {
-    const newErrors = {}; // Removed `: any` as it's unnecessary in JS
+    const newErrors = {};
     if (!form.NAMAAGAMA.trim())
-      newErrors.NAMAAGAMA = (
-        <span style={{ color: "red" }}>Nama agama wajib diisi</span>
-      );
+      newErrors.NAMAAGAMA = "Nama agama wajib diisi";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -58,10 +58,10 @@ const Page = () => {
     try {
       if (isEdit) {
         await axios.put(url, form);
-        toastRef.current?.showToast("00", "Data berhasil diperbarui");
+        toastRef.current?.showToast("00", "Data agama berhasil diperbarui");
       } else {
         await axios.post(url, form);
-        toastRef.current?.showToast("00", "Data berhasil ditambahkan");
+        toastRef.current?.showToast("00", "Data agama berhasil ditambahkan");
       }
       fetchData();
       setDialogVisible(false);
@@ -72,7 +72,7 @@ const Page = () => {
     }
   };
 
-  const handleEdit = (row) => { // Removed TypeScript type
+  const handleEdit = (row) => {
     setForm(row);
     setDialogVisible(true);
   };
