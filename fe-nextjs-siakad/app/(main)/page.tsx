@@ -11,7 +11,7 @@ const lineData: ChartData = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
     datasets: [
         {
-            label: 'First Dataset',
+            label: 'Nilai Siswa',
             data: [65, 59, 80, 81, 56, 55, 40],
             fill: false,
             backgroundColor: '#2f4860',
@@ -19,7 +19,7 @@ const lineData: ChartData = {
             tension: 0.4
         },
         {
-            label: 'Second Dataset',
+            label: 'Absensi',
             data: [28, 48, 40, 19, 86, 27, 90],
             fill: false,
             backgroundColor: '#00bb7e',
@@ -30,7 +30,7 @@ const lineData: ChartData = {
 };
 
 const Dashboard = () => {
-    const [products, setProducts] = useState<Demo.Product[]>([]);
+    const [students, setStudents] = useState<Demo.Product[]>([]);
     const [lineOptions, setLineOptions] = useState<ChartOptions>({});
     const { layoutConfig } = useContext(LayoutContext);
 
@@ -98,10 +98,6 @@ const Dashboard = () => {
         setLineOptions(lineOptions);
     };
 
-    // useEffect(() => {
-    //     ProductService.getProductsSmall().then((data) => setProducts(data));
-    // }, []);
-
     useEffect(() => {
         if (layoutConfig.colorScheme === 'light') {
             applyLightTheme();
@@ -116,66 +112,63 @@ const Dashboard = () => {
                 <div className="card mb-0">
                     <div className="flex justify-content-between mb-3">
                         <div>
-                            <span className="block text-500 font-medium mb-3">Orders</span>
-                            <div className="text-900 font-medium text-xl">152</div>
+                            <span className="block text-500 font-medium mb-3">Jumlah Siswa</span>
+                            <div className="text-900 font-medium text-xl">350</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-blue-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
-                            <i className="pi pi-shopping-cart text-blue-500 text-xl" />
+                            <i className="pi pi-users text-blue-500 text-xl" />
                         </div>
                     </div>
-                    <span className="text-green-500 font-medium">24 new </span>
-                    <span className="text-500">since last visit</span>
                 </div>
             </div>
             <div className="col-12 lg:col-6 xl:col-3">
                 <div className="card mb-0">
                     <div className="flex justify-content-between mb-3">
                         <div>
-                            <span className="block text-500 font-medium mb-3">Revenue</span>
-                            <div className="text-900 font-medium text-xl">$2.100</div>
+                            <span className="block text-500 font-medium mb-3">Absensi Siswa</span>
+                            <div className="text-900 font-medium text-xl">95%</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-orange-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
-                            <i className="pi pi-map-marker text-orange-500 text-xl" />
+                            <i className="pi pi-calendar text-orange-500 text-xl" />
                         </div>
                     </div>
-                    <span className="text-green-500 font-medium">%52+ </span>
-                    <span className="text-500">since last week</span>
+                    <span className="text-green-500 font-medium">Meningkat</span>
+                    <span className="text-500">dari minggu lalu</span>
                 </div>
             </div>
             <div className="col-12 lg:col-6 xl:col-3">
                 <div className="card mb-0">
                     <div className="flex justify-content-between mb-3">
                         <div>
-                            <span className="block text-500 font-medium mb-3">Customers</span>
-                            <div className="text-900 font-medium text-xl">28441</div>
+                            <span className="block text-500 font-medium mb-3">Nilai Rata-rata</span>
+                            <div className="text-900 font-medium text-xl">85</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-cyan-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
-                            <i className="pi pi-inbox text-cyan-500 text-xl" />
+                            <i className="pi pi-chart-line text-cyan-500 text-xl" />
                         </div>
                     </div>
-                    <span className="text-green-500 font-medium">520 </span>
-                    <span className="text-500">newly registered</span>
+                    <span className="text-green-500 font-medium">Peningkatan</span>
+                    <span className="text-500">dari tahun lalu</span>
                 </div>
             </div>
             <div className="col-12 lg:col-6 xl:col-3">
                 <div className="card mb-0">
                     <div className="flex justify-content-between mb-3">
                         <div>
-                            <span className="block text-500 font-medium mb-3">Comments</span>
-                            <div className="text-900 font-medium text-xl">152 Unread</div>
+                            <span className="block text-500 font-medium mb-3">Tugas Belum Dinilai</span>
+                            <div className="text-900 font-medium text-xl">32</div>
                         </div>
                         <div className="flex align-items-center justify-content-center bg-purple-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
-                            <i className="pi pi-comment text-purple-500 text-xl" />
+                            <i className="pi pi-pencil text-purple-500 text-xl" />
                         </div>
                     </div>
-                    <span className="text-green-500 font-medium">85 </span>
-                    <span className="text-500">responded</span>
+                    <span className="text-red-500 font-medium">Segera Dinilai</span>
                 </div>
             </div>
 
             <div className="col-12">
                 <div className="card">
-                    <h5>Data Suhu Selama Sehari</h5>
+                    <h5>Nilai Siswa Per Bulan</h5>
                     <Chart type="line" data={lineData} options={lineOptions} />
                 </div>
 
@@ -186,7 +179,7 @@ const Dashboard = () => {
 
             <div className="col-12">
                 <div className="card">
-                    <h5>Data Suhu Selama Seminggu</h5>
+                    <h5>Absensi Siswa Per Minggu</h5>
                     <Chart type="line" data={lineData} options={lineOptions} />
                 </div>
 
@@ -197,7 +190,7 @@ const Dashboard = () => {
 
             <div className="col-12">
                 <div className="card">
-                    <h5>Data Suhu Selama Sebulan</h5>
+                    <h5>Absensi Siswa Per Bulan</h5>
                     <Chart type="line" data={lineData} options={lineOptions} />
                 </div>
 

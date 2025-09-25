@@ -6,17 +6,14 @@ interface AppLayoutProps {
 }
 
 export const metadata: Metadata = {
-    title: 'PrimeReact Sakai',
-    description: 'The ultimate collection of design-agnostic, flexible and accessible React UI Components.',
-    robots: { index: false, follow: false },
+    title: 'SMA Bunga - Sistem Informasi Akademik',
+    description: 'Sistem Informasi Akademik untuk SMA Bunga, memudahkan pengelolaan data akademik dan siswa.',
+    robots: { index: true, follow: true },
     viewport: { initialScale: 1, width: 'device-width' },
     openGraph: {
         type: 'website',
-        title: 'PrimeReact SAKAI-REACT',
-        url: 'https://sakai.primereact.org/',
-        description: 'The ultimate collection of design-agnostic, flexible and accessible React UI Components.',
-        images: ['https://www.primefaces.org/static/social/sakai-react.png'],
-        ttl: 604800
+        title: 'SMA Bunga - Sistem Informasi Akademik',
+        description: 'Sistem Informasi Akademik untuk SMA Bunga, memudahkan pengelolaan data akademik dan siswa.'
     },
     icons: {
         icon: '/favicon.ico'

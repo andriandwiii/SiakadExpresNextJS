@@ -24,6 +24,6 @@
             "@/*": ["./*"]
         }
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/(main)/superadmin/menu/users/components/UserTable.js", "app/components/ToastNotifier.tsx", "layout/AppTopbar.js"],
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/(main)/superadmin/menu/users/components/UserTable.js", "app/components/ToastNotifier.js", "layout/AppTopbar.js", "app/(main)/master/siswa/page.js", "app/(main)/master/siswa/components/tabelSiswa.js", "app/(main)/master/siswa/components/formDialogSiswa.js"],
     "exclude": ["node_modules"]
 }
