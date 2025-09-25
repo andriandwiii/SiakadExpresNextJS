@@ -23,14 +23,12 @@ export const getMapelByKode = async (kode) =>
 export const createMapel = async ({
   KODE_MAPEL,
   NAMA_MAPEL,
-  DESKRIPSI,
   KATEGORI,
   STATUS,
 }) => {
   const [id] = await db("master_mata_pelajaran").insert({
     KODE_MAPEL,
     NAMA_MAPEL,
-    DESKRIPSI,
     KATEGORI,
     STATUS,
   });
@@ -42,11 +40,11 @@ export const createMapel = async ({
  **/
 export const updateMapel = async (
   id,
-  { KODE_MAPEL, NAMA_MAPEL, DESKRIPSI, KATEGORI, STATUS }
+  { KODE_MAPEL, NAMA_MAPEL, KATEGORI, STATUS }
 ) => {
   await db("master_mata_pelajaran")
     .where({ MAPEL_ID: id })
-    .update({ KODE_MAPEL, NAMA_MAPEL, DESKRIPSI, KATEGORI, STATUS });
+    .update({ KODE_MAPEL, NAMA_MAPEL, KATEGORI, STATUS });
   return db("master_mata_pelajaran").where({ MAPEL_ID: id }).first();
 };
 

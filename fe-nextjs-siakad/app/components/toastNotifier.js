@@ -3,24 +3,14 @@
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 import { Toast } from 'primereact/toast';
 
-
 const ToastNotifier = forwardRef((_, ref) => {
   const toastRef = useRef(null);
 
   useImperativeHandle(ref, () => ({
-    showToast(status, message = '', action = null, duration = 3000, position = 'top-right') {
+    showToast(status, message = '') {
       let config = {
-        life: duration,  
-        position: position,  
-        style: { marginTop: '10px' }, 
+        life: 3000,
       };
-
-      if (action) {
-        config = {
-          ...config,
-          action: action,
-        };
-      }
 
       switch (status) {
         case '00':
@@ -68,13 +58,7 @@ const ToastNotifier = forwardRef((_, ref) => {
     },
   }));
 
-  return (
-    <Toast
-      ref={toastRef}
-      className="p-toast-custom"
-      style={{ margin: '10px' }}  
-    />
-  );
+  return <Toast ref={toastRef} />;
 });
 
 ToastNotifier.displayName = 'ToastNotifier';

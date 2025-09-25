@@ -5,7 +5,7 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 
-const FormAsetStyles = {
+const FormKurikulumStyles = {
   dialog: {
     width: "30vw",
     borderRadius: "8px",
@@ -47,11 +47,11 @@ const FormAsetStyles = {
   },
 };
 
-const FormAset = ({ visible, formData, onHide, onChange, onSubmit, errors }) => {
+const FormKurikulum = ({ visible, formData, onHide, onChange, onSubmit, errors }) => {
   const inputClass = (field) =>
     errors[field]
-      ? { ...FormAsetStyles.inputText, ...FormAsetStyles.invalidInput }
-      : FormAsetStyles.inputText;
+      ? { ...FormKurikulumStyles.inputText, ...FormKurikulumStyles.invalidInput }
+      : FormKurikulumStyles.inputText;
 
   const statusOptions = [
     { label: "Aktif", value: "Aktif" },
@@ -60,10 +60,10 @@ const FormAset = ({ visible, formData, onHide, onChange, onSubmit, errors }) => 
 
   return (
     <Dialog
-      header={formData.ID ? "Edit Aset Sekolah" : "Tambah Aset Sekolah"}
+      header={formData.ID ? "Edit Kurikulum" : "Tambah Kurikulum"}
       visible={visible}
       onHide={onHide}
-      style={FormAsetStyles.dialog}
+      style={FormKurikulumStyles.dialog}
     >
       <form
         className="space-y-3"
@@ -73,64 +73,37 @@ const FormAset = ({ visible, formData, onHide, onChange, onSubmit, errors }) => 
         }}
       >
         <div>
-          <label style={FormAsetStyles.formLabel}>Nama Barang</label>
+          <label style={FormKurikulumStyles.formLabel}>Nama Kurikulum</label>
           <InputText
-            style={inputClass("NAMA_BARANG")}
-            value={formData.NAMA_BARANG}
-            onChange={(e) => onChange({ ...formData, NAMA_BARANG: e.target.value })}
+            style={inputClass("NAMA_KURIKULUM")}
+            value={formData.NAMA_KURIKULUM}
+            onChange={(e) => onChange({ ...formData, NAMA_KURIKULUM: e.target.value })}
           />
-          {errors.NAMA_BARANG && <small style={FormAsetStyles.errorMessage}>{errors.NAMA_BARANG}</small>}
+          {errors.NAMA_KURIKULUM && <small style={FormKurikulumStyles.errorMessage}>{errors.NAMA_KURIKULUM}</small>}
         </div>
 
         <div>
-          <label style={FormAsetStyles.formLabel}>Merk / Type</label>
-          <InputText
-            style={inputClass("MERK_TYPE")}
-            value={formData.MERK_TYPE}
-            onChange={(e) => onChange({ ...formData, MERK_TYPE: e.target.value })}
-          />
-        </div>
-
-        <div>
-          <label style={FormAsetStyles.formLabel}>Jumlah Barang</label>
+          <label style={FormKurikulumStyles.formLabel}>Tahun</label>
           <InputText
             type="number"
-            style={inputClass("JUMLAH_BARANG")}
-            value={formData.JUMLAH_BARANG}
-            onChange={(e) => onChange({ ...formData, JUMLAH_BARANG: e.target.value })}
+            style={inputClass("TAHUN")}
+            value={formData.TAHUN}
+            onChange={(e) => onChange({ ...formData, TAHUN: e.target.value })}
           />
-          {errors.JUMLAH_BARANG && <small style={FormAsetStyles.errorMessage}>{errors.JUMLAH_BARANG}</small>}
+          {errors.TAHUN && <small style={FormKurikulumStyles.errorMessage}>{errors.TAHUN}</small>}
         </div>
 
         <div>
-          <label style={FormAsetStyles.formLabel}>Asal / Usul Perolehan</label>
+          <label style={FormKurikulumStyles.formLabel}>Deskripsi</label>
           <InputText
-            style={inputClass("ASAL_USUL_PEROLEHAN")}
-            value={formData.ASAL_USUL_PEROLEHAN}
-            onChange={(e) => onChange({ ...formData, ASAL_USUL_PEROLEHAN: e.target.value })}
+            style={inputClass("DESKRIPSI")}
+            value={formData.DESKRIPSI}
+            onChange={(e) => onChange({ ...formData, DESKRIPSI: e.target.value })}
           />
         </div>
 
         <div>
-          <label style={FormAsetStyles.formLabel}>Periode</label>
-          <InputText
-            style={inputClass("PERIODE")}
-            value={formData.PERIODE}
-            onChange={(e) => onChange({ ...formData, PERIODE: e.target.value })}
-          />
-        </div>
-
-        <div>
-          <label style={FormAsetStyles.formLabel}>Keterangan</label>
-          <InputText
-            style={inputClass("KETERANGAN")}
-            value={formData.KETERANGAN}
-            onChange={(e) => onChange({ ...formData, KETERANGAN: e.target.value })}
-          />
-        </div>
-
-        <div>
-          <label style={FormAsetStyles.formLabel}>Status</label>
+          <label style={FormKurikulumStyles.formLabel}>Status</label>
           <Dropdown
             value={formData.STATUS}
             options={statusOptions}
@@ -139,7 +112,7 @@ const FormAset = ({ visible, formData, onHide, onChange, onSubmit, errors }) => 
             placeholder="Pilih Status"
             style={inputClass("STATUS")}
           />
-          {errors.STATUS && <small style={FormAsetStyles.errorMessage}>{errors.STATUS}</small>}
+          {errors.STATUS && <small style={FormKurikulumStyles.errorMessage}>{errors.STATUS}</small>}
         </div>
 
         <div className="text-right pt-3">
@@ -147,9 +120,9 @@ const FormAset = ({ visible, formData, onHide, onChange, onSubmit, errors }) => 
             type="submit"
             label="Simpan"
             icon="pi pi-save"
-            style={FormAsetStyles.submitButton}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = FormAsetStyles.submitButtonHover.backgroundColor)}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = FormAsetStyles.submitButton.backgroundColor)}
+            style={FormKurikulumStyles.submitButton}
+            onMouseEnter={(e) => (e.target.style.backgroundColor = FormKurikulumStyles.submitButtonHover.backgroundColor)}
+            onMouseLeave={(e) => (e.target.style.backgroundColor = FormKurikulumStyles.submitButton.backgroundColor)}
           />
         </div>
       </form>
@@ -157,4 +130,4 @@ const FormAset = ({ visible, formData, onHide, onChange, onSubmit, errors }) => 
   );
 };
 
-export default FormAset;
+export default FormKurikulum;

@@ -7,9 +7,10 @@ import { useRouter } from "next/navigation";
 import TabelInformasiSekolah from "./components/tabelInformasiSekolah"; // Ensure the path is correct
 import FormInformasiSekolah from "./components/formDialogInformasiSekolah"; // Ensure the path is correct
 import HeaderBar from "@/app/components/headerbar";
-import ToastNotifier from "@/app/components/toastNotifier";
+import ToastNotifier from "/app/components/toastNotifier";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 
+// API URL
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const InformasiSekolahPage = () => {
@@ -23,7 +24,7 @@ const InformasiSekolahPage = () => {
     NAMA_SEKOLAH: "",
     ALAMAT: "",
     JENJANG_AKREDITASI: "",
-    TANGGAL_AKREDITASI: "",
+    TANGGAL_AKREDITASI: null, // Updated to Date type
     NPSN: "",
     STATUS: "",
   });
@@ -50,10 +51,17 @@ const InformasiSekolahPage = () => {
 
   const validateForm = () => {
     const newErrors = {};
+
+    // Validate text fields
     if (!formData.NAMA_SEKOLAH?.trim()) newErrors.NAMA_SEKOLAH = "Nama Sekolah wajib diisi";
     if (!formData.ALAMAT?.trim()) newErrors.ALAMAT = "Alamat wajib diisi";
     if (!formData.JENJANG_AKREDITASI?.trim()) newErrors.JENJANG_AKREDITASI = "Jenjang Akreditasi wajib diisi";
-    if (!formData.TANGGAL_AKREDITASI?.trim()) newErrors.TANGGAL_AKREDITASI = "Tanggal Akreditasi wajib diisi";
+
+    // Validate Date (TANGGAL_AKREDITASI)
+    if (!(formData.TANGGAL_AKREDITASI instanceof Date) || isNaN(formData.TANGGAL_AKREDITASI)) {
+      newErrors.TANGGAL_AKREDITASI = "Tanggal Akreditasi wajib diisi";
+    }
+
     if (!formData.NPSN?.trim()) newErrors.NPSN = "NPSN wajib diisi";
     if (!formData.STATUS?.trim()) newErrors.STATUS = "Status wajib diisi";
 
@@ -130,7 +138,7 @@ const InformasiSekolahPage = () => {
       NAMA_SEKOLAH: "",
       ALAMAT: "",
       JENJANG_AKREDITASI: "",
-      TANGGAL_AKREDITASI: "",
+      TANGGAL_AKREDITASI: null,  // Reset to null
       NPSN: "",
       STATUS: "",
     });

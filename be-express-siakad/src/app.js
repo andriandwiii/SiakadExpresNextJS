@@ -15,7 +15,6 @@ import masterMapelRoutes from "./routes/masterMapelRoutes.js";
 import masterAsetSekolahRoutes from "./routes/masterAsetSekolahRoutes.js";
 import dashboardRoutes from './routes/dashboardRoutes.js';
 import userRoutes from "./routes/userRoutes.js";
-import masterSiswaRoutes from "./routes/masterSiswaRoutes.js";
 import masterKelasRoutes from "./routes/masterKelasRoutes.js";
 
 const app = express();
@@ -67,7 +66,6 @@ app.use("/api/master-mapel", masterMapelRoutes);
 app.use("/api/master-aset-sekolah", masterAsetSekolahRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use("/api/user", userRoutes);
-app.use("/api/master-siswa", masterSiswaRoutes);
 app.use("/api/master-kelas", masterKelasRoutes);
 app.use("/api/master-guru", masterGuruRoutes); 
 

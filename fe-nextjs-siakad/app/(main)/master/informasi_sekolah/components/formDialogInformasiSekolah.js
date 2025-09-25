@@ -4,6 +4,7 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
+import { Calendar } from 'primereact/calendar';  // Import Calendar
 
 // CSS untuk styling form
 const FormInformasiSekolahStyles = {
@@ -113,10 +114,12 @@ const FormInformasiSekolah = ({
 
         <div>
           <label style={FormInformasiSekolahStyles.formLabel}>Tanggal Akreditasi</label>
-          <InputText
+          <Calendar
             style={inputClass('TANGGAL_AKREDITASI')}
             value={formData.TANGGAL_AKREDITASI}
             onChange={(e) => onChange({ ...formData, TANGGAL_AKREDITASI: e.target.value })}
+            dateFormat="yy-mm-dd"  // Format tanggal
+            showIcon
           />
           {errors.TANGGAL_AKREDITASI && <small style={FormInformasiSekolahStyles.errorMessage}>{errors.TANGGAL_AKREDITASI}</small>}
         </div>
